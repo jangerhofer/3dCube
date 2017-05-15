@@ -14,10 +14,10 @@ document.addEventListener("DOMContentLoaded", function(event) {
         scene.clearColor = new BABYLON.Color3(0, 0, 0);
 
         var camera = new BABYLON.ArcRotateCamera("ArcRotateCamera", 1, 0.8, 7, new BABYLON.Vector3(0, 0, 0), scene);
-        camera.setTarget(new BABYLON.Vector3(-0.5,-0.5,-0.5));
+        camera.setTarget(new BABYLON.Vector3(-0.5, -0.5, -0.5));
         camera.attachControl(canvas, false);
 
-        var dim = 2
+        var dim = 3
         for (var x = 0; x < dim; x++) {
             for (var y = 0; y < dim; y++) {
                 for (var z = 0; z < dim; z++) {
@@ -26,10 +26,10 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
                     // Set up random bulb color
                     //var randomColor = new BABYLON.Color3.Random()
-                    var randomColor = new BABYLON.Color3(1,1,0,1)
+                    var randomColor = new BABYLON.Color3(1, 1, 0, 1)
 
                     // Create bulb body
-                    var bulb = BABYLON.Mesh.CreateSphere(x+""+y+z, 16, 0.1, scene);
+                    var bulb = BABYLON.Mesh.CreateSphere(x + "" + y + z, 16, 0.1, scene);
                     bulb.position = {
                         x: -(offset) + x,
                         y: -(offset) + y,
@@ -49,10 +49,44 @@ document.addEventListener("DOMContentLoaded", function(event) {
                 }
             }
         }
-        //scene.getMeshByName("000").isVisible = false
-        scene.getMeshByName("000").material.emissiveColor = new BABYLON.Color3(1,0,0,1)
-        scene.getMeshByName("000")._children[0].diffuse = new BABYLON.Color3(1,0,0,1)
-        scene.getMeshByName("000")._children[0].specular = new BABYLON.Color3(1,0,0,1)
+
+        function changeLEDColor(scene, coords, colorList) {
+            scene.getMeshByName("" + coords[0] + coords[1] + coords[2]).material.emissiveColor = new BABYLON.Color3(colorList[0], colorList[1], colorList[2], 1.0)
+        }
+
+        function changeColumnColor(scene, rowStart, colorList) {
+            for (var row = 0;; row++) {
+                try {
+                  changeLEDColor(scene, [rowStart[0], row, rowStart[2]], colorList)
+                } catch (e) {
+                    break;
+                }
+            }
+        }
+
+        function changeRowColor(scene, rowStart, colorList) {
+            for (var row = 0;; row++) {
+                try {
+                  changeLEDColor(scene, [row, rowStart[1], rowStart[2]], colorList)
+                } catch (e) {
+                    break;
+                }
+            }
+        }
+
+        function changeSliceColor(scene, rowStart, colorList) {
+            for (var row = 0;; row++) {
+                try {
+                  changeLEDColor(scene, [rowStart[0], rowStart[1], row], colorList)
+                } catch (e) {
+                    break;
+                }
+            }
+        }
+
+        changeColumnColor(scene, [0,0,0], [1,0,0])
+        changeRowColor(scene, [0,0,0], [1,0,1])
+        changeSliceColor(scene, [1,0,0], [0,1,1])
 
         return scene;
 
