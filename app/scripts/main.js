@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
         camera.setTarget(new BABYLON.Vector3(-0.5,-0.5,-0.5));
         camera.attachControl(canvas, false);
 
-        var dim = 5
+        var dim = 2
         for (var x = 0; x < dim; x++) {
             for (var y = 0; y < dim; y++) {
                 for (var z = 0; z < dim; z++) {
@@ -25,29 +25,34 @@ document.addEventListener("DOMContentLoaded", function(event) {
                     var offset = dim / 2
 
                     // Set up random bulb color
-                    var randomColor = new BABYLON.Color3.Random()
+                    //var randomColor = new BABYLON.Color3.Random()
+                    var randomColor = new BABYLON.Color3(1,1,0,1)
 
                     // Create bulb body
-                    var bulb = BABYLON.Mesh.CreateSphere("sphere", 16, 0.1, scene);
+                    var bulb = BABYLON.Mesh.CreateSphere(x+""+y+z, 16, 0.1, scene);
                     bulb.position = {
                         x: -(offset) + x,
                         y: -(offset) + y,
                         z: -(offset) + z
                     }
-                  
+
                     // Set "skin" of bulb to appear lit, even when there is no light on it
                     bulb.material = new BABYLON.StandardMaterial('LED', scene);
                     bulb.material.emissiveColor = randomColor
 
                     // Create light inside body such that bulb lights other objects
                     var bulbLight = new BABYLON.PointLight("Omni0", new BABYLON.Vector3(0, 0, 0), scene);
-                    bulbLight.diffuse = randomColor
-                    bulbLight.specular = randomColor
+                    bulbLight.parent = bulb;
+                    bulbLight.intensity = 0
                     bulbLight.position.copyFrom(bulb.position);
 
                 }
             }
         }
+        //scene.getMeshByName("000").isVisible = false
+        scene.getMeshByName("000").material.emissiveColor = new BABYLON.Color3(1,0,0,1)
+        scene.getMeshByName("000")._children[0].diffuse = new BABYLON.Color3(1,0,0,1)
+        scene.getMeshByName("000")._children[0].specular = new BABYLON.Color3(1,0,0,1)
 
         return scene;
 
