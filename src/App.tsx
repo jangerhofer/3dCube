@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import * as THREE from "three";
+import { times } from "lodash";
 
 export default class ThreeSceneComponent extends Component {
   private mount: HTMLDivElement;
@@ -24,40 +25,46 @@ export default class ThreeSceneComponent extends Component {
     this.renderer.setSize(width, height);
     this.mount.appendChild(this.renderer.domElement);
 
-    var bulbGeometry = new THREE.SphereGeometry(20, 64, 64);
-    var bulbLight = new THREE.PointLight("rgba(255,255,255)", 1, 1000);
-    var bulbMat = new THREE.MeshStandardMaterial({
-      emissive: "rgb(255,255,0)",
-      emissiveIntensity: 1,
-      color: 0xffffee,
-      roughness: 1
+    const group = new THREE.Group();
+
+    const singleLED = this.createLED();
+
+    const dim = 3;
+    times(dim, z => {
+      times(dim, x => {
+        times(dim, y => {
+          const newLED = singleLED.clone();
+          newLED.position.set(x * 1, y * 1, z * 1);
+          group.add(newLED);
+        });
+      });
     });
 
-    bulbLight.add(new THREE.Mesh(bulbGeometry, bulbMat));
-    bulbLight.position.set(0, 0, 0);
-    bulbLight.castShadow = true;
-
-    // this.scene.add(bulbLight);
-
-    // Test sphere
-    var sphere = new THREE.SphereBufferGeometry( 0.2, 50, 50 );
-    bulbLight = new THREE.PointLight( 0xffee88, 1, 100, 2 );
-    bulbMat = new THREE.MeshStandardMaterial( {
-      emissive: "rgb(255,0,0)",
-      emissiveIntensity: 0.1,
-      color: "rgb(255,0,0)"
-    } );
-    bulbLight.add( new THREE.Mesh( sphere, bulbMat ) );
-    bulbLight.position.set( 0, 2, 0 );
-    bulbLight.castShadow = true;
-    this.scene.add( bulbLight );
+    this.scene.add(group);
 
     this.start();
   }
+
+  createLED() {
+    // Test sphere
+    var sphere = new THREE.SphereBufferGeometry(0.2, 50, 50);
+    var bulbLight = new THREE.PointLight(0xffee88, 1, 100, 2);
+    var bulbMat = new THREE.MeshStandardMaterial({
+      emissive: "rgb(255,50,0)",
+      emissiveIntensity: 1,
+      color: "rgb(255,0,0)"
+    });
+    bulbLight.add(new THREE.Mesh(sphere, bulbMat));
+    // bulbLight.position.set(0,0,0);
+    bulbLight.castShadow = true;
+    return bulbLight;
+  }
+
   componentWillUnmount() {
     this.stop();
     this.mount.removeChild(this.renderer.domElement);
   }
+
   start = () => {
     if (!this.frameId) {
       this.frameId = requestAnimationFrame(this.animate);
