@@ -1,0 +1,32 @@
+{
+  "name": "3dcube",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@types/jest": "23.3.9",
+    "@types/node": "10.12.5",
+    "@types/react": "16.7.2",
+    "@types/react-dom": "16.0.9",
+    "@types/three": "^0.93.8",
+    "react": "^16.6.1",
+    "react-dom": "^16.6.1",
+    "react-scripts": "2.1.1",
+    "three": "^0.98.0",
+    "typescript": "3.1.6"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
+}
