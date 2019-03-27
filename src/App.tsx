@@ -27,18 +27,34 @@ export default class ThreeSceneComponent extends Component {
 
     const group = new THREE.Group();
 
-    const singleLED = this.createLED();
+    // const singleLED = this.createLED();
 
-    const dim = 3;
-    times(dim, z => {
-      times(dim, x => {
-        times(dim, y => {
-          const newLED = singleLED.clone();
-          newLED.position.set(x * 1, y * 1, z * 1);
-          group.add(newLED);
-        });
-      });
+    var sphere = new THREE.SphereGeometry(0.2, 50, 50);
+
+    var object = new THREE.Mesh(sphere, [
+      new THREE.MeshStandardMaterial({
+        color: "rgb(255,255,255)",
+        emissive: "gray",
+        emissiveIntensity: 1
+      })
+    ]);
+    times(10, i => {
+      const newObj = object.clone();
+      newObj.position.x = i < 5 ? i * 1 : (i - 5) * -1;
+      newObj.material[0].emissiveIntensity = Math.random()
+      group.add(newObj);
     });
+
+    // const dim = 4;
+    // times(dim, z => {
+    //   times(dim, x => {
+    //     times(dim, y => {
+    //       const newLED = singleLED.clone();
+    //       newLED.position.set(x * 1, y * 1, z * 1);
+    //       group.add(newLED);
+    //     });
+    //   });
+    // });
 
     this.scene.add(group);
 
